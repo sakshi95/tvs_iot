@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+
+    <title>Register</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+
+    <style type="text/css">
+        .footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            /* Set the fixed height of the footer here */
+            height: 60px;
+            line-height: 60px; /* Vertically center the text there */
+            background-color: #f5f5f5;
+        }
+    </style>
+    <script type="text/javascript">
+        var app = new angular.module("loginApp", []);
+        app.controller("myController", function ($scope, $http, $window) {
+            $scope.role = "hod";
+            $scope.resp = '';
+            $scope.tryLogin = function () {
+                if ($scope.email && $scope.password) {
+                    $http({
+                        method: 'POST',
+                        url: 'login.php',
+                        data: {email: $scope.email, password: $scope.password, category: $scope.role}
+                    }).then(function (response) {
+                        var result = angular.fromJson(response.data);
+                        $scope.resp = result.data;
+                        if (result.success) {
+                            $window.location.href = result.url;
+                        }
+                        else {
+                            $window.alert(result.data)
+                        }
+                        console.log(response.data, response.status);
+                    }, function (response) {
+                        $scope.resp = response.data;
+                        console.log(response.data, response.status);
+                    })
+                }
+                else {
+                    $window.alert("Enter required fields");
+                }
+            };
+        })
+    </script>
+</head>
+
+<body >
+<div class="container">
+    <div class="row">
+        <div class="col-md-4"></div>
+            <div class="col-md-4">
+
+
+
+        <p class="login-box-msg">Sign up to permit</p>
+        <form role="form" ng-submit="tryLogin()" ng-app="loginApp" ng-controller="myController">
+            <fieldset>
+
+                <div class="form-group">
+                    <input class="form-control" placeholder="E-mail" ng-model="email" name="email" type="email"
+                           autofocus>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" placeholder="Password" ng-model="password" name="password"
+                           type="password" value="">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" placeholder="Confirm Password" ng-model="cpassword" name="password"
+                           type="password" value="">
+                </div>
+                <!-- Change this to a button or input when using this as a form -->
+                <button type="submit" class="btn btn-lg btn-primary btn-block">Login</button>
+            </fieldset>
+        </form>
+    </div>
+        <div class="col-md-4"></div>
+    <!-- jQuery -->
+    <script src="js/jquery-1.11.1.min.js"></script>
+
+
+
+
+
+    </div>
+<div class="row"><footer class="footer">
+    <div class="container" align="center">
+        <span class="text-muted">&copy; Copyright 2018 Prixgen</span>
+    </div>
+</footer></div>
+</div>
+</body>
+</html>
